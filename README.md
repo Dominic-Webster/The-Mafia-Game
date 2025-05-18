@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.0.0
+## Version 1.0.1
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
