@@ -28,6 +28,7 @@ Lie, evade, and eliminate your way to victory!
 - Cop: You have two bullets. Every night, you can choose to shoot a player. However, shooting at an innocent will result in your death instead, so shoot wisely. Work with the village to eliminate the killers.
 - Mafia: You may be outnumbered, but you know who your allies are. Work with them to kill one player every night. Your goal: eliminate the innocents.
 - Fool: Chaos is your game. You only win if you are executed in court.
+- Priest: You survive death once per game. Work with the village to eliminate the killers.
 
 ---
 
@@ -53,3 +54,8 @@ Lie, evade, and eliminate your way to victory!
 - Game Launched
 - 26 Computer Players
 - 6 Unique Roles: Villager, Mafia, Fool, Cop, Doctor, and Detective
+
+#### UPDATE 1.0.1
+05/18/2025
+- Minor bug fixes
+- New Role: Priest
