@@ -10,6 +10,27 @@
 
 ---
 
+### DESCRIPTION
+
+Have you ever wanted to play Mafia, but don't have the players?
+Now you can play on your own, with 26 unique computer-controlled players!
+You get a secret role every match, and must try to complete your objective, while preventing the other teams from completing theirs.
+What's the catch? No one knows what roles the other players have.
+Lie, evade, and eliminate your way to victory!
+
+---
+
+### ROLES
+
+- Villager: You have no abilities, but the advantage of numbers. Eliminate the killers in court to save yourself and the rest of the village.
+- Doctor: Every night, you can save one person from death. Work with the village to eliminate the killers.
+- Detective: Every night, you can investigate one person to learn their role. Work with the village to eliminate the killers.
+- Cop: You have two bullets. Every night, you can choose to shoot a player. However, shooting at an innocent will result in your death instead, so shoot wisely. Work with the village to eliminate the killers.
+- Mafia: You may be outnumbered, but you know who your allies are. Work with them to kill one player every night. Your goal: eliminate the innocents.
+- Fool: Chaos is your game. You only win if you are executed in court.
+
+---
+
 ### HOW TO DOWNLOAD
 
 - Copy this repository's url: https://github.com/Dominic-Webster/The-Mafia-Game.git
