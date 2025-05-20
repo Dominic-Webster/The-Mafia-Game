@@ -261,10 +261,10 @@ void set_roles(){
         }
     }
 
-    //serial killer (1) [50% chance to be in game]
+    //serial killer (1) [75% chance to be in game]
     if(serial_k == 0){
-        X = rand()%2;
-        if(X == 0){
+        X = rand()%4;
+        if(X != 0){
             temp.set_name("Serial Killer");
             temp.set_team("Serial Killer");
             roles.push_back(temp);
