@@ -501,62 +501,75 @@ void night(){
     //COP
     //player
     if(alive && what == "Cop"){
-        do{
-            cout << "\e[31m Bullet count: ";
-            if(Player.get_role().get_lvl() == 1){
-                cout << cop1_bullets << endl;
-            }
-            else{
-                cout << cop2_bullets << endl;
-            }
-            cout << "\e[33m Do you want to shoot anyone?\n";
-            cout << " *Shooting at an innocent will result in your death instead*\e[0m\n";
-            cout << " \e[35m1:\e[0m Shoot someone\n";
-            cout << " \e[35m2:\e[0m Wait for now\n";
-            cout << " -> ";
-            cin >> X;
-        }while(X != 1 && X != 2);
-
-        if(X == 2){
-            cout << "\n\e[33m You hold on to your bullet for now\e[0m\n";
+        if(Player.get_role().get_lvl() == 1 && cop1_bullets == 0){
+            cout << "\e[33m You're out of bullets!\n";
+            cout << " You sleep through the night, ready for court tomorrow\e[0m\n";
+        }
+        else if(Player.get_role().get_lvl() == 2 && cop2_bullets == 0){
+            cout << "\e[33m You're out of bullets!\n";
+            cout << " You sleep through the night, ready for court tomorrow\e[0m\n";
         }
         else{
             do{
-                cout << "\e[33m Select a player to shoot\e[0m\n";
-                for(size_t i = 1; i < Town.size(); i++){
-                    cout << "\e[35m " << i << ": \e[0m" << Town.at(i).get_name() << endl;
+                cout << "\e[31m Bullet count: ";
+                if(Player.get_role().get_lvl() == 1){
+                    cout << cop1_bullets << endl;
                 }
+                else{
+                    cout << cop2_bullets << endl;
+                }
+                cout << "\e[33m Do you want to shoot anyone?\n";
+                cout << " *Shooting at an innocent will result in your death instead*\e[0m\n";
+                cout << " \e[35m1:\e[0m Shoot someone\n";
+                cout << " \e[35m2:\e[0m Wait for now\n";
                 cout << " -> ";
                 cin >> X;
-            }while(X < 1 && X > Town.size());
-
-        cout << "\nYou shoot at \e[31m" << Town.at(X).get_name() << "\e[0m" << endl;
-
-        if(Town.at(X).get_role().get_name() != "Mafia"){
-            cout << "\e[31m You have tried to kill an innocent! You shoot yourself due to guilt\e[0m\n";
-            X = 0;
-        }
-
-        if(Player.get_role().get_lvl() == 1){
-            cop1 = Town.at(X);
-            cop1_bullets--;
-        }
-        else{
-            cop2 = Town.at(X);
-            cop2_bullets--;
-        }
+            }while(X != 1 && X != 2);
+    
+            if(X == 2){
+                cout << "\n\e[33m You hold on to your bullet for now\e[0m\n";
+            }
+            else{
+                do{
+                    cout << "\n\e[33m Select a player to shoot\e[0m\n";
+                    for(size_t i = 1; i < Town.size(); i++){
+                        cout << "\e[35m " << i << ": \e[0m" << Town.at(i).get_name() << endl;
+                    }
+                    cout << " -> ";
+                    cin >> X;
+                }while(X < 1 && X > Town.size());
+    
+                cout << "\nYou shoot at \e[31m" << Town.at(X).get_name() << "\e[0m" << endl;
+    
+                if(Town.at(X).get_role().get_team() == "Village"){
+                    cout << "\e[31m You have tried to kill an innocent! You shoot yourself due to guilt\e[0m\n";
+                    if(doctor1.get_name() == "Player" || doctor2.get_name() == "Player"){
+                        cout << "\e[32m Thanks to quick medical attention, you survive!\e[0m\n";
+                    }
+                    X = 0;
+                }
+    
+                if(Player.get_role().get_lvl() == 1){
+                    cop1 = Town.at(X);
+                    cop1_bullets--;
+                }
+                else{
+                    cop2 = Town.at(X);
+                    cop2_bullets--;
+                }
+            }
         }
     }
     //computer
     //cop1
     X = rand() % (Town.size() / 3);
-    if(X == 0){
+    if(X == 0 && cop1_bullets != 0){
         for(size_t i = 0; i < Town.size(); i++){
             if(Town.at(i).get_role().get_name() == "Cop" && Town.at(i).get_role().get_lvl() == 1 && Town.at(i).get_name() != "Player"){
                 do{
                     X = rand()%Town.size();
                 }while(X == i);
-                if(Town.at(X).get_role().get_name() != "Mafia"){
+                if(Town.at(X).get_role().get_team() == "Village"){
                     X = i;
                 }
                 cop1 = Town.at(X);
@@ -566,13 +579,13 @@ void night(){
     }
     //cop2
     X = rand() % (Town.size() / 3);
-    if(X == 0){
+    if(X == 0 && cop2_bullets != 0){
         for(size_t i = 0; i < Town.size(); i++){
             if(Town.at(i).get_role().get_name() == "Cop" && Town.at(i).get_role().get_lvl() == 2 && Town.at(i).get_name() != "Player"){
                 do{
                     X = rand()%Town.size();
                 }while(X == i);
-                if(Town.at(X).get_role().get_name() != "Mafia"){
+                if(Town.at(X).get_role().get_team() == "Village"){
                     X = i;
                 }
                 cop2 = Town.at(X);
@@ -610,6 +623,9 @@ void day(){
         cout << " shot last night\e[0m\n";
     }
     else{
+        if((cop1.get_name() != doctor1.get_name() || cop1.get_name() != doctor2.get_name()) && cop1.get_name() != ""){
+            cout << "\e[33m A shot rang out last night\e[0m\n";
+        }
         cop1.set_name("");
     }
 
@@ -619,6 +635,9 @@ void day(){
         cout << " shot last night\e[0m\n";
     }
     else{
+        if((cop2.get_name() != doctor1.get_name() || cop2.get_name() != doctor2.get_name()) && cop2.get_name() != "O"){
+            cout << "\e[33m A shot rang out last night\e[0m\n";
+        }
         cop2.set_name("");
     }
 
@@ -816,7 +835,7 @@ void court(){
         player_def();
     }
     else{
-        cout << "\e[36m " << guilty.get_name() << "\e[0m declares: ";
+        cout << "\e[36m " << guilty.get_name() << "\e[0m: ";
         defense(guilty);
         cout << endl;
     }
