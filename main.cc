@@ -400,7 +400,7 @@ void night(){
             }
             cout << " -> ";
             cin >> X;
-        }while(X < 1 && X > Town.size());
+        }while(X < 1 || X > Town.size());
 
         if(Player.get_role().get_lvl() == 1){
             doctor1 = Town.at(X-1);
@@ -445,7 +445,7 @@ void night(){
             }
             cout << " -> ";
             cin >> X;
-        }while(X < 1 && X > Town.size() && Town.at(X).get_role().get_name() != "Mafia");
+        }while(X < 1 || X > Town.size() || Town.at(X).get_role().get_team() == "Mafia");
 
         mafia = Town.at(X);
     }
@@ -467,7 +467,7 @@ void night(){
             }
             cout << " -> ";
             cin >> X;
-        }while(X < 1 && X > Town.size());
+        }while(X < 1 || X > Town.size());
 
         cout << endl << "\e[33m " << Town.at(X).get_name() << "\e[0m is a \e[36m" << Town.at(X).get_role().get_name() << "\e[0m" << endl;
 
@@ -524,7 +524,7 @@ void night(){
                 cout << " \e[35m2:\e[0m Wait for now\n";
                 cout << " -> ";
                 cin >> X;
-            }while(X != 1 && X != 2);
+            }while(X < 1 || X > 2);
     
             if(X == 2){
                 cout << "\n\e[33m You hold on to your bullet for now\e[0m\n";
@@ -537,7 +537,7 @@ void night(){
                     }
                     cout << " -> ";
                     cin >> X;
-                }while(X < 1 && X > Town.size());
+                }while(X < 1 || X > Town.size());
     
                 cout << "\nYou shoot at \e[31m" << Town.at(X).get_name() << "\e[0m" << endl;
     
@@ -743,7 +743,7 @@ void court(){
             }
             cout << " -> ";
             cin >> X;
-        }while(X < 1 && X > Town.size());
+        }while(X < 1 || X > Town.size());
         guilty = Town.at(X);
 
         //determine if rest of town will agree
@@ -854,7 +854,7 @@ void court(){
             }
             cout << "\e[35m 1:\e[0m Spare\n \e[35m2:\e[0m Execute\n -> ";
             cin >> X;
-        }while(X != 1 && X != 2);
+        }while(X < 1 || X > 2);
         cout << endl;
         if(X == 1){
             cout << "\e[36mYou\e[0m vote to \e[32mspare\e[0m\n";
@@ -1010,7 +1010,6 @@ void court(){
         }
     }
 
- 
 }
 
 void statement(Person who){
@@ -1152,20 +1151,21 @@ void statement(Person who){
                 else{cout << "Mafia"; sus.push_back(Town.at(X));}
             }
             else{ //true declaration
-                if(who.get_role().get_lvl() == 1){
+                if(who.get_role().get_lvl() == 1 && detective1.size() != 0){
                     X = rand() % (detective1.size());
                     cout << detective1.at(X).get_name() << " is a " << detective1.at(X).get_role().get_name();
                     if(detective1.at(X).get_role().get_name() == "Mafia"){
                         sus.push_back(detective1.at(X)); sus.push_back(detective1.at(X));
                     }
                 }
-                else{
+                else if(who.get_role().get_lvl() == 2 && detective2.size() != 0){
                     X = rand() % (detective2.size());
                     cout << detective2.at(X).get_name() << " is a " << detective2.at(X).get_role().get_name();
                     if(detective2.at(X).get_role().get_name() == "Mafia"){
                         sus.push_back(detective2.at(X)); sus.push_back(detective2.at(X));
                     }
                 }
+                else{cout << "I wish to withhold information for now";}
             }
             return;
         }
@@ -1374,7 +1374,7 @@ void player_statement(){
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m I don't want to reveal my role yet\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else{answer = "I don't want to reveal my role yet"; sus.push_back(Player);}
@@ -1386,7 +1386,7 @@ void player_statement(){
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m I was praying last night\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else{answer = "I was praying last night";}
@@ -1398,7 +1398,7 @@ void player_statement(){
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m I was up studying last night\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else{answer = "I was up studying last night";}
@@ -1410,7 +1410,7 @@ void player_statement(){
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m I am an officer of the law\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else{answer = "I am an officer of the law";}
@@ -1422,7 +1422,7 @@ void player_statement(){
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m I'm a Doctor\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else{answer = "I'm a Doctor";}
@@ -1433,33 +1433,35 @@ void player_statement(){
             cout << "\e[35m 1:\e[0m I have nothing to declare\n";
             cout << "\e[35m 2:\e[0m I'm just a Villager\n";
             cout << "\e[35m 3:\e[0m ";
-            if(Player.get_role().get_lvl() == 1){
+            if(Player.get_role().get_lvl() == 1 && detective1.size() != 0){
                 cout << detective1.at(detective1.size()-1).get_name() << " is a " << detective1.at(detective1.size()-1).get_role().get_name();
             } 
-            else{
+            else if((Player.get_role().get_lvl() == 2 && detective2.size() != 0)){
                 cout << detective2.at(detective2.size()-1).get_name() << " is a " << detective2.at(detective2.size()-1).get_role().get_name();
             }
+            else{cout << "I wish to withhold information for now\n";}
             cout << endl;
             cout << "\e[35m 4:\e[0m I am a Detective\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else if(X == 3){
-            if(Player.get_role().get_lvl() == 1){
+            if(Player.get_role().get_lvl() == 1 && detective1.size() != 0){
                 answer = detective1.at(detective1.size()-1).get_name() + " is a " + detective1.at(detective1.size()-1).get_role().get_name();
                 if(detective1.at(detective1.size()-1).get_role().get_name() == "Mafia"){
                     sus.push_back(detective1.at(detective1.size()-1)); 
                     sus.push_back(detective1.at(detective1.size()-1));
                 }
             } 
-            else{
-                cout << detective2.at(detective2.size()-1).get_name() + " is a " + detective2.at(detective2.size()-1).get_role().get_name();
+            else if(Player.get_role().get_lvl() == 2 && detective2.size() != 0){
+                answer = detective2.at(detective2.size()-1).get_name() + " is a " + detective2.at(detective2.size()-1).get_role().get_name();
                 if(detective2.at(detective2.size()-1).get_role().get_name() == "Mafia"){
                     sus.push_back(detective2.at(detective2.size()-1)); 
                     sus.push_back(detective2.at(detective2.size()-1));
                 }
             }
+            else{answer = "I wish to withhold information for now";}
         }
         else{answer = "I am a Detective";}
     }
@@ -1472,7 +1474,7 @@ void player_statement(){
             cout << "\e[35m 4:\e[0m I'm a Doctor\n";
             cout << "\e[35m 5:\e[0m I don't want to reveal my role yet\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 5);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else if(X == 3){answer = "I'm a Cop"; sus.push_back(Player);}
@@ -1488,7 +1490,7 @@ void player_statement(){
             cout << "\e[35m 4:\e[0m I'm a Doctor\n";
             cout << "\e[35m 5:\e[0m I don't want to reveal my role yet\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 5);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
         else if(X == 3){answer = "I'm a Cop";}
@@ -1513,7 +1515,7 @@ void player_def(){
             cout << "\e[35m 2:\e[0m If you vote for me, you'll regret it\n";
             cout << "\e[35m 3:\e[0m Don't kill me, you need me\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 3);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "If you vote for me, you'll regret it\n"; def_factor--;}
@@ -1528,7 +1530,7 @@ void player_def(){
             cout << "\e[35m 3:\e[0m Let me live another day\n";
             cout << "\e[35m 4:\e[0m I'm a holy person. Let me be\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "Please don't kill me!\n"; def_factor--;}
@@ -1544,7 +1546,7 @@ void player_def(){
             cout << "\e[35m 3:\e[0m This isn't the way!\n";
             cout << "\e[35m 4:\e[0m I'm a simple Scholar! I don't commit violent acts!\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "Please don't kill me!\n"; def_factor--;}
@@ -1560,7 +1562,7 @@ void player_def(){
             cout << "\e[35m 3:\e[0m Don't kill me, you need me\n";
             cout << "\e[35m 4:\e[0m I'm a Cop. I can help you\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "You'll regret killing me\n"; def_factor--;}
@@ -1576,7 +1578,7 @@ void player_def(){
             cout << "\e[35m 3:\e[0m Don't kill me, you need me\n";
             cout << "\e[35m 4:\e[0m I'm a Doctor. I save lives, I don't take them\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "I don't want to die\n"; def_factor--;}
@@ -1592,7 +1594,7 @@ void player_def(){
             cout << "\e[35m 3:\e[0m Don't kill me, you need me\n";
             cout << "\e[35m 4:\e[0m I'm a Detective. I know things\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 4);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "You'll regret killing me\n"; def_factor--;}
@@ -1609,7 +1611,7 @@ void player_def(){
             cout << "\e[35m 4:\e[0m I'm a Detective. I know things\n";
             cout << "\e[35m 5:\e[0m I'm a Cop, you all need me\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 5);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n"; def_factor--;}
         else if(X == 2){cout << "You'll regret killing me\n"; def_factor-=2;}
@@ -1627,7 +1629,7 @@ void player_def(){
             cout << "\e[35m 4:\e[0m I'm a Detective. I know things\n";
             cout << "\e[35m 5:\e[0m I'm a Cop, you all need me\n -> ";
             cin >> X;
-        }while(X < 1 && X > 3);
+        }while(X < 1 || X > 5);
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "You don't want to kill me\n"; def_factor--;}
