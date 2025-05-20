@@ -189,7 +189,7 @@ void set_roles(){
     temp.set_lvl(1);
 
     //set player
-    int X = rand()%10;
+    int X = rand()%12;
     if(X == 0){
         temp.set_name("Villager");
         temp.set_team("Village");
@@ -668,7 +668,7 @@ void day(){
     cout << " \e[36m  DAY " << night_count << "\e[0m" << endl << endl;
 
     //night events
-    if(mafia.get_name() != doctor1.get_name() && mafia.get_name() != doctor2.get_name()){
+    if(mafia_count != 0 && mafia.get_name() != doctor1.get_name() && mafia.get_name() != doctor2.get_name()){
         cout << "\e[33m The Mafia killed \e[31m";
         if(mafia.get_name() == "Player"){cout << "you"; alive = false;}
         else{cout << mafia.get_name();}
@@ -679,7 +679,7 @@ void day(){
         mafia.set_name("");
     }
 
-    if(serial.get_name() != doctor1.get_name() && serial.get_name() != doctor2.get_name()){
+    if(!ser_kill && serial.get_name() != doctor1.get_name() && serial.get_name() != doctor2.get_name()){
         cout << "\e[31m ";
         if(serial.get_name() == "Player"){cout << "You\e[33m were"; alive = false;}
         else{cout << serial.get_name() << "\e[33m was";}
@@ -813,7 +813,12 @@ void court(){
 
     //guilty nomination
     cout << "\e[33m Court will proceed. The guilty must be punished\e[0m\n";
-    if(alive){ //player still in game
+    if(Town.size() == 2){
+        cout << "\e[33m To keep it fair, a coin is flipped\e[0m\n";
+        X = rand()%2;
+        guilty = Town.at(X);
+    }
+    else if(alive){ //player still in game
         do{
             cout << "\e[33m Nominate someone to stand trial \e[0m\n";
             for(size_t i = 1; i < Town.size(); i++){
@@ -928,7 +933,13 @@ void court(){
 
     //vote to kill
     cout << "\e[33m The town will now decide if the guilty person will live or die\e[0m\n";
-    if(alive && guilty.get_name() != "Player"){ //player not on trial
+    if(Town.size() == 2){
+        cout << "\e[33m To keep it fair, a coin is flipped\e[0m\n";
+        X = rand()%2;
+        if(X == 0){spare++;}
+        else{kill++;}
+    }
+    else if(alive && guilty.get_name() != "Player"){ //player not on trial
         do{
             cout << "\e[33m Should \e[36m" << guilty.get_name() << "\e[33m be spared or executed?\e[0m\n";
             if(Player.get_role().get_name() == "Scholar"){
@@ -1545,14 +1556,14 @@ void player_statement(){
         else if(X == 3){
             if(Player.get_role().get_lvl() == 1 && detective1.size() != 0){
                 answer = detective1.at(detective1.size()-1).get_name() + " is a " + detective1.at(detective1.size()-1).get_role().get_name();
-                if(detective1.at(detective1.size()-1).get_role().get_name() == "Mafia"){
+                if(detective1.at(detective1.size()-1).get_role().get_name() == "Mafia" || detective1.at(detective1.size()-1).get_role().get_name() == "Serial Killer"){
                     sus.push_back(detective1.at(detective1.size()-1)); 
                     sus.push_back(detective1.at(detective1.size()-1));
                 }
             } 
             else if(Player.get_role().get_lvl() == 2 && detective2.size() != 0){
                 answer = detective2.at(detective2.size()-1).get_name() + " is a " + detective2.at(detective2.size()-1).get_role().get_name();
-                if(detective2.at(detective2.size()-1).get_role().get_name() == "Mafia"){
+                if(detective2.at(detective2.size()-1).get_role().get_name() == "Mafia" || detective2.at(detective2.size()-1).get_role().get_name() == "Serial Killer"){
                     sus.push_back(detective2.at(detective2.size()-1)); 
                     sus.push_back(detective2.at(detective2.size()-1));
                 }
