@@ -2046,7 +2046,7 @@ void eval(){
             }
         }
     }
-    else if(mafia_count == 0){ //mafia eliminated
+    else if(mafia_count == 0 && !ser_kill){ //killers eliminated
         cout << "\n\e[33m  THE MAFIA HAVE BEEN ELIMINATED\n";
         cout << "  GAME OVER\e[0m\n";
         if(Player.get_role().get_name() != "Mafia" && Player.get_role().get_name() != "Fool"){
@@ -2112,7 +2112,7 @@ void eval(){
     }
     else{return;} //no win
 
-    cout << "\ne[33m  *List of Roles*\e[0m\n";
+    cout << "\n\e[33m  *List of Roles*\e[0m\n";
     for(size_t i = 0; i < dead.size(); i++){
         cout << "\e[34m - \e[0m" << dead.at(i).get_name() << ": " << dead.at(i).get_role().get_name() << endl;
     }
