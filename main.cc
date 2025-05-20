@@ -2125,6 +2125,7 @@ void eval(){
     else{return;} //no win
 
     cout << "\n\e[33m  *List of Roles*\e[0m\n";
+    cout << " \e[31m DEAD\n";
     for(size_t i = 0; i < dead.size(); i++){
         cout << "\e[34m - \e[0m" << dead.at(i).get_name() << ": ";
         if(dead.at(i).get_role().get_team() == "Village"){cout << "\e[32m";}
@@ -2132,6 +2133,7 @@ void eval(){
         else{cout << "\e[33m";}
         cout << dead.at(i).get_role().get_name() << "\e[0m\n";
     }
+    cout << " \e[32m ALIVE\n";
     for(size_t i = 0; i < Town.size(); i++){
         cout << "\e[34m - \e[0m" << Town.at(i).get_name() << ": ";
         if(Town.at(i).get_role().get_team() == "Village"){cout << "\e[32m";}
