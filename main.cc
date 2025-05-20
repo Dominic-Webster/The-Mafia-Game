@@ -840,11 +840,13 @@ void court(){
         if(X == 1){
             cout << "\e[36mYou\e[0m vote to \e[32mspare\e[0m\n";
             if(Player.get_role().get_name() == "Scholar"){spare+=3;}
+            if(Player.get_role().get_name() == "Detective"){spare+=2;}
             else{spare++;}
         }
         else{
             cout << "\e[36mYou\e[0m vote to \e[31mexecute\e[0m\n";
             if(Player.get_role().get_name() == "Scholar"){kill+=3;}
+            if(Player.get_role().get_name() == "Detective"){kill+=2;}
             else{kill++;}
         }
 
@@ -894,11 +896,11 @@ void court(){
             if(Town.at(i).get_name() != guilty.get_name()){
                 cout << "\e[36m" << Town.at(i).get_name() << "\e[0m votes to ";
                 if(guilty.get_name() == "Player" && guilty.get_role().get_name() == "Fool"){ //increase chance of player winning as fool
-                    if(def_factor == -2){X = rand()%6;}
-                    else if(def_factor == -1){X = rand()%7;}
-                    else if(def_factor == 0){X = rand()%8;}
-                    else if(def_factor == 1){X = rand()%9;}
-                    else{def_factor = rand()%10;}
+                    if(def_factor == -2){X = 0;}
+                    else if(def_factor == -1){X = rand()%6;}
+                    else if(def_factor == 0){X = rand()%7;}
+                    else if(def_factor == 1){X = rand()%8;}
+                    else{def_factor = rand()%9;}
                     if(X < 5){
                         cout << "\e[32mspare\e[0m";
                         if(Town.at(i).get_role().get_name() == "Scholar"){spare+=3;}
@@ -998,6 +1000,9 @@ void statement(Person who){
         X = rand()%50;
         if(X == 0){
             cout << "I'm in the Mafia";
+            sus.push_back(who);
+            sus.push_back(who);
+            sus.push_back(who);
             return;
         }
         if(what == "Villager"){
@@ -1421,11 +1426,17 @@ void player_statement(){
         else if(X == 3){
             if(Player.get_role().get_lvl() == 1){
                 answer = detective1.at(detective1.size()-1).get_name() + " is a " + detective1.at(detective1.size()-1).get_role().get_name();
-                sus.push_back(detective1.at(detective1.size()-1)); sus.push_back(detective1.at(detective1.size()-1));
+                if(detective1.at(detective1.size()-1).get_role().get_name() == "Mafia"){
+                    sus.push_back(detective1.at(detective1.size()-1)); 
+                    sus.push_back(detective1.at(detective1.size()-1));
+                }
             } 
             else{
                 cout << detective2.at(detective2.size()-1).get_name() + " is a " + detective2.at(detective2.size()-1).get_role().get_name();
-                sus.push_back(detective2.at(detective2.size()-1)); sus.push_back(detective2.at(detective2.size()-1));
+                if(detective2.at(detective2.size()-1).get_role().get_name() == "Mafia"){
+                    sus.push_back(detective2.at(detective2.size()-1)); 
+                    sus.push_back(detective2.at(detective2.size()-1));
+                }
             }
         }
         else{answer = "I am a Detective";}
