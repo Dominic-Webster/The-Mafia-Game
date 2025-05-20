@@ -865,7 +865,10 @@ void court(){
         else{
             cout << "\e[36mYou\e[0m vote to \e[31mexecute\e[0m\n";
             if(Player.get_role().get_name() == "Scholar"){kill+=3;}
-            if(Player.get_role().get_name() == "Detective"){kill+=2;}
+            if(Player.get_role().get_name() == "Detective"){
+                kill+=2;
+                if(guilty.get_role().get_team() == "Mafia"){kill++;}
+            }
             else{kill++;}
         }
 
@@ -1894,7 +1897,7 @@ void defense(Person who){
             }
             else if(X == 1){
                 cout << "I was asleep all night";
-                def_factor++;
+                if(Player.get_role().get_name() != "Detective"){def_factor++;}
             }
             else if(X == 2){
                 cout << "Please don't kill me!";
@@ -1902,7 +1905,7 @@ void defense(Person who){
             }
             else if(X == 3){
                 cout << "I'm literally just a Villager, I've done nothing at all!";
-                def_factor+=2;
+                if(Player.get_role().get_name() != "Detective"){def_factor+=2;}
             }
             else{
                 cout << "Please don't kill me!";
@@ -1911,18 +1914,21 @@ void defense(Person who){
         }
         else if(X == 1){
             cout << "Listen, I'm a detective, don't kill me!";
+            if(Player.get_role().get_name() != "Detective"){def_factor--;}
         }
         else if(X == 2){
             cout << "I'm a doctor, you need me!";
         }
         else if(X == 3){
             cout << "I am a holy person! Spare my life!";
+            if(priest){def_factor -= 2;}
         }
         else if(X == 4){
             cout << "I'm a Scholar! I don't do violence!";
         }
         else{
             cout << "Don't do this. I'm a cop!";
+            if(Player.get_role().get_name() != "Detective"){def_factor--;}
         }
         return;
     }
