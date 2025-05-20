@@ -174,7 +174,6 @@ void role_list(){
 }
 
 void set_roles(){
-    int X;
     vector <Role> roles;
     int mafia = 0, villager = 0, cop = 0, doctor = 0, detective = 0, fool = 0, priest_count = 0, scholar = 0;
     Role temp("");
