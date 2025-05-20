@@ -2058,7 +2058,7 @@ void eval(){
             }
         }
     }
-    else if(mafia_count == 0 && !ser_kill){ //killers eliminated
+    else if(mafia_count == 0 && !ser_kill && (!alive && Player.get_role().get_name() == "Serial Killer")){ //killers eliminated
         cout << "\n\e[33m  THE MAFIA HAVE BEEN ELIMINATED\n";
         cout << "  GAME OVER\e[0m\n";
         if(Player.get_role().get_name() != "Mafia" && Player.get_role().get_name() != "Fool"){
