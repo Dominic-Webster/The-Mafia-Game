@@ -12,10 +12,10 @@ Person Player("Player"), Adam("Adam"), Brent("Brent"), Cindy("Cindy"), Daphne("D
     Uncle_Parker("Uncle Parker"), Veronica("Veronica"), Wendy("Wendy"), Xavier("Xavier"), Yorra("Yorra"), Zoe("Zoe");
 
 vector <Person> Town, detective1, detective2, dead, sus;
-Person doctor1(""), doctor2(""), mafia(""), cop1(""), cop2("");
+Person doctor1(""), doctor2(""), mafia(""), cop1(""), cop2(""), serial("");
 int cop1_bullets, cop2_bullets, night_count, def_factor;
 size_t mafia_count;
-bool alive, fool, priest;
+bool alive, fool, priest, ser_kill;
 
 void set_roles(); void town_load(); void player_statement();
 void menu(); void eval(); void court();
@@ -76,9 +76,10 @@ void play(){
     string X;
     town_load();
     detective1.clear(); detective2.clear(); dead.clear(); sus.clear();
-    doctor1.set_name(""); doctor2.set_name("X"); mafia.set_name(""); cop1.set_name(""); cop2.set_name("O");
+    doctor1.set_name(""); doctor2.set_name("X"); mafia.set_name(""); cop1.set_name(""); 
+    cop2.set_name("O"); serial.set_name("");
     cop1_bullets = cop2_bullets = 2; night_count = 1;
-    alive = true; fool = priest = false;
+    alive = ser_kill = true; fool = priest = false;
     set_roles();
     Player = Town.at(0);
     string player_role = Player.get_role().get_name();
@@ -107,6 +108,9 @@ void play(){
     }
     else if(player_role == "Fool"){
         cout << " All you want is to be executed in court\n";
+    }
+    else if(player_role == "Serial Killer"){
+        cout << " You must eliminate the entire population\n";
     }
     cout << "\n\e[33m Night falls, and the village falls asleep\e[0m\n\n";
     cout << "\e[32m [Enter 1 to proceed]\e[0m\n -> ";
@@ -166,7 +170,11 @@ void role_list(){
 
     cout << "\e[36m-\e[0m \e[33mFool:\e[0m Fool Team\n";
     cout << "   \e[35m-\e[0m Win Condition: Be executed in court\n";
-    cout << "   \e[35m-\e[0m Ability: None\n\n";
+    cout << "   \e[35m-\e[0m Ability: None\n";
+
+    cout << "\e[36m-\e[0m \e[33mSerial Killer:\e[0m Serial Killer Team\n";
+    cout << "   \e[35m-\e[0m Win Condition: Be the last player alive\n";
+    cout << "   \e[35m-\e[0m Ability: Wake up at night to kill a player\n\n";
 
     cout << "\e[36m[Enter 1 to return to menu]\e[0m\n -> ";
     cin >> X;
@@ -175,7 +183,8 @@ void role_list(){
 
 void set_roles(){
     vector <Role> roles;
-    int mafia = 0, villager = 0, cop = 0, doctor = 0, detective = 0, fool = 0, priest_count = 0, scholar = 0;
+    int mafia = 0, villager = 0, cop = 0, doctor = 0, detective = 0, fool = 0, priest_count = 0, 
+    scholar = 0, serial_k = 0;
     Role temp("");
     temp.set_lvl(1);
 
@@ -187,7 +196,7 @@ void set_roles(){
         villager++;
     }
     else{
-        X = rand()%23;
+        X = rand()%27;
         if(X < 5){
             temp.set_name("Mafia");
             temp.set_team("Mafia");
@@ -218,6 +227,12 @@ void set_roles(){
             temp.set_team("Village");
             scholar++;
         }
+        else if(X < 23){
+            temp.set_name("Serial Killer");
+            temp.set_team("Serial Killer");
+            ser_kill = false;
+            serial_k++;
+        }
         else{
             temp.set_name("Detective");
             temp.set_team("Village");
@@ -244,11 +259,16 @@ void set_roles(){
             roles.push_back(temp);
             scholar++;
         }
-        else{
-            temp.set_name("Villager");
-            temp.set_team("Village");
+    }
+
+    //serial killer (1) [50% chance to be in game]
+    if(serial_k == 0){
+        X = rand()%2;
+        if(X == 0){
+            temp.set_name("Serial Killer");
+            temp.set_team("Serial Killer");
             roles.push_back(temp);
-            villager++;
+            serial_k++;
         }
     }
 
@@ -336,14 +356,22 @@ void set_roles(){
         mafia_count++;
     }
 
-    //villagers (12/13 - 17/18)
+    //villagers (11/13 - 16/18)
     temp.set_name("Villager");
     temp.set_team("Village");
-    for(int i = 0; i < 12; i++){
+    for(int i = 0; i < 11; i++){
         roles.push_back(temp);
         villager++;
     }
     if(cop == 1){
+        roles.push_back(temp);
+        villager++;
+    }
+    if(scholar == 0){
+        roles.push_back(temp);
+        villager++;
+    }
+    if(serial_k == 0){
         roles.push_back(temp);
         villager++;
     }
@@ -440,7 +468,9 @@ void night(){
             cout << "\e[33m Select a player to kill tonight\e[0m\n";
             for(size_t i = 1; i < Town.size(); i++){
                 if(Town.at(i).get_role().get_name() != "Mafia"){
-                    cout << "\e[35m " << i << ":\e[0m " << Town.at(i).get_name() << endl;
+                    cout << "\e[35m " << i << ":\e[0m " << Town.at(i).get_name();
+                    if(priest && Town.at(i).get_role().get_name() == "Priest"){cout << " (Priest)";}
+                    cout << endl;
                 }
             }
             cout << " -> ";
@@ -455,6 +485,38 @@ void night(){
             X = rand()%Town.size();
         }while(Town.at(X).get_role().get_name() == "Mafia");
         mafia = Town.at(X);
+    }
+
+    //SERIAL KILLER
+    //player
+    if(alive && what == "Serial Killer"){
+        do{
+            cout << "\e[33m Select a player to kill tonight\e[0m\n";
+            for(size_t i = 1; i < Town.size(); i++){
+                cout << "\e[35m " << i << ":\e[0m " << Town.at(i).get_name();
+                if(priest && Town.at(i).get_role().get_name() == "Priest"){cout << " (Priest)";}
+                cout << endl;
+            }
+            cout << " -> ";
+            cin >> X;
+        }while(X < 1 || X > Town.size());
+
+        serial = Town.at(X);
+    }
+    //computer
+    else if(ser_kill){ 
+        X = rand()%4; //25% chance to kill a mafia
+        if(mafia_count != 0 && X == 0){
+            do{
+                X = rand()%Town.size();
+            }while(Town.at(X).get_role().get_team() != "Mafia");
+        }
+        else{
+            do{
+                X = rand()%Town.size();
+            }while(Town.at(X).get_role().get_name() == "Serial Killer");
+        }
+        serial = Town.at(X);
     }
 
     //DETECTIVE
@@ -617,6 +679,16 @@ void day(){
         mafia.set_name("");
     }
 
+    if(serial.get_name() != doctor1.get_name() && serial.get_name() != doctor2.get_name()){
+        cout << "\e[31m ";
+        if(serial.get_name() == "Player"){cout << "You\e[33m were"; alive = false;}
+        else{cout << serial.get_name() << "\e[33m was";}
+        cout << " stabbed last night\e[0m\n";
+    }
+    else{
+        serial.set_name("");
+    }
+
     if(cop1.get_name() != doctor1.get_name() && cop1.get_name() != doctor2.get_name() && cop1.get_name() != ""){
         if(cop1.get_name() == "Player"){cout << "\e[31m You\e[33m were"; alive = false;}
         else{cout << " \e[31m" << cop1.get_name() << "\e[33m was";}
@@ -642,13 +714,14 @@ void day(){
     }
 
     //priest
-    if(mafia.get_role().get_name() == "Priest" && !priest){
+    if(!priest && (mafia.get_role().get_name() == "Priest" || serial.get_role().get_name() == "Priest")){
         cout << "\n \e[33m Divine intervention takes place!\e[0m\n";
-        if(mafia.get_name() == "Player"){cout << "\e[35m You\e[33m are revealed to be the \e[37mPriest!\n";}
+        if(mafia.get_name() == "Player"){cout << "\e[35m You\e[33m are revealed to be the \e[37mPriest!\n"; alive = true;}
         else{cout << "\e[35m " << mafia.get_name() << "\e[33m is revealed to be the \e[37mPriest!\n";}
         cout << " \e[33m A death is averted!\e[0m\n";
         priest = true;
-        mafia.set_name("");
+        if(mafia.get_role().get_name() == "Priest"){mafia.set_name("");}
+        if(serial.get_role().get_name() == "Priest"){serial.set_name("");}
     }
 
     cout << endl;
@@ -656,6 +729,14 @@ void day(){
     //remove dead players
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == mafia.get_name()){
+            if(mafia.get_role().get_name() == "Serial Killer"){ser_kill = false;}
+            dead.push_back(Town.at(i));
+            Town.erase(Town.begin() + i);
+        }
+    }
+    for(size_t i = 0; i < Town.size(); i++){
+        if(Town.at(i).get_name() == serial.get_name()){
+            if(serial.get_role().get_name() == "Mafia"){mafia_count--;}
             dead.push_back(Town.at(i));
             Town.erase(Town.begin() + i);
         }
@@ -918,12 +999,25 @@ void court(){
             if(Town.at(i).get_name() != guilty.get_name()){
                 cout << "\e[36m" << Town.at(i).get_name() << "\e[0m votes to ";
                 if(guilty.get_name() == "Player" && guilty.get_role().get_name() == "Fool"){ //increase chance of player winning as fool
-                    if(def_factor == -2){X = 0;}
-                    else if(def_factor == -1){X = rand()%6;}
-                    else if(def_factor == 0){X = rand()%7;}
-                    else if(def_factor == 1){X = rand()%8;}
-                    else{def_factor = rand()%9;}
-                    if(X < 5){
+                    if(def_factor == -2){X = rand()%6;}
+                    else if(def_factor == -1){X = rand()%7;}
+                    else if(def_factor == 0){X = rand()%8;}
+                    else if(def_factor == 1){X = rand()%9;}
+                    else{def_factor = rand()%10;}
+                    if(X > 4){
+                        cout << "\e[32mspare\e[0m";
+                        if(Town.at(i).get_role().get_name() == "Scholar"){spare+=3;}
+                        else{spare++;}
+                    }
+                    else{
+                        cout << "\e[31mexecute\e[0m";
+                        if(Town.at(i).get_role().get_name() == "Scholar"){kill+=3;}
+                        else{kill++;}
+                    }
+                }
+                else if(guilty.get_name() == "Player" && guilty.get_role().get_name() == "Serial Killer"){ //better chance to survive as serial killer
+                    X = rand()%3;
+                    if(X != 0){
                         cout << "\e[32mspare\e[0m";
                         if(Town.at(i).get_role().get_name() == "Scholar"){spare+=3;}
                         else{spare++;}
@@ -993,7 +1087,7 @@ void court(){
         cout << "\e[33m will be executed immediately\e[0m\n";
         if(!priest && guilty.get_role().get_name() == "Priest"){
             cout << "\n \e[33m Divine intervention takes place!\e[0m\n ";
-            if(guilty.get_name() == "Player"){cout << " You are revealed to be the Priest!\n";}
+            if(guilty.get_name() == "Player"){cout << " You are revealed to be the Priest!\n"; alive = true;}
             else{cout << " " << guilty.get_name() << " is revealed to be the Priest!\n";}
             cout << " \e[33m The execution is averted!\e[0m\n";
             priest = true;
@@ -1005,6 +1099,7 @@ void court(){
                     Town.erase(Town.begin() + i);
                     if(guilty.get_role().get_name() == "Fool"){fool = true;}
                     if(guilty.get_role().get_name() == "Mafia"){mafia_count--;}
+                    if(guilty.get_role().get_name() == "Serial Killer"){ser_kill = false;}
                 }
             }
         }
@@ -1026,7 +1121,7 @@ void statement(Person who){
             sus.push_back(who);
             return;
         }
-        if(what == "Villager"){
+        if(what == "Villager" || what == "Serial Killer"){
             X = rand()%16;
             if(X == 0){
                 cout << "I'm a Doctor";
@@ -1279,8 +1374,8 @@ void statement(Person who){
             return;
         }
     }
-    //villager (10% chance to pretend to be another role)
-    if(what == "Villager"){
+    //villager/serial killer (10% chance to pretend to be another role)
+    if(what == "Villager" || what == "Serial Killer"){
         X = rand()%10;
         if(X == 0){ //fake a role
             X = rand()%4;
@@ -1367,7 +1462,7 @@ void player_statement(){
     size_t X;
     string what = Player.get_role().get_name(), answer = "";
 
-    if(what == "Villager"){
+    if(what == "Villager" || what == "Serial Killer"){
         do{
             cout << "\e[33m What would you like to say?\e[0m\n";
             cout << "\e[35m 1:\e[0m I have nothing to declare\n";
@@ -1508,7 +1603,7 @@ void player_statement(){
 void player_def(){
     size_t X;
     string what = Player.get_role().get_name();
-    if(what == "Villager"){
+    if(what == "Villager" || what == "Serial Killer"){
         do{
             cout << " \e[33mWhat would you like to say?\e[0m\n";
             cout << "\e[35m 1:\e[0m I'm innocent\n";
@@ -1676,7 +1771,7 @@ void defense(Person who){
         return;
     }
 
-    if(what == "Villager"){
+    if(what == "Villager" || what == "Serial Killer"){
         X = rand()%5;
         if(X == 0){
             cout << "I'm innocent, I swear!";
@@ -1974,7 +2069,7 @@ void eval(){
             }
         }
     }
-    else if(mafia_count > (Town.size() / 2) || (Town.size()%2 == 0 && mafia_count == (Town.size() / 2))){ //mafia have eliminated enough people
+    else if(!ser_kill && (mafia_count > (Town.size() / 2) || (Town.size()%2 == 0 && mafia_count == (Town.size() / 2)))){ //mafia have eliminated enough people
         cout << "\n\e[33m  THE MAFIA HAVE TAKEN OVER THE VILLAGE\n";
         cout << "  GAME OVER\e[0m\n";
         if(Player.get_role().get_name() == "Mafia"){
@@ -2005,7 +2100,25 @@ void eval(){
             }
         }
     }
+    else if(Town.size() == 1 && ser_kill){ //serial killer last person standing
+        cout << "\n\e[33m  THE SERIAL KILLER HAS ELIMINATED THE ENTIRE POPULATION\n";
+        cout << "  GAME OVER\e[0m\n";
+        if(Player.get_role().get_name() == "Serial Killer"){
+            cout << "\e[32m You Win! \e[0m\n";
+        }
+        else{
+           cout << " \e[31m" << Town.at(0).get_name() << " Wins!\e[0m\n";
+        }
+    }
     else{return;} //no win
+
+    cout << "\ne[33m  *List of Roles*\e[0m\n";
+    for(size_t i = 0; i < dead.size(); i++){
+        cout << "\e[34m - \e[0m" << dead.at(i).get_name() << ": " << dead.at(i).get_role().get_name() << endl;
+    }
+    for(size_t i = 0; i < Town.size(); i++){
+        cout << "\e[34m - \e[0m" << Town.at(i).get_name() << ": " << Town.at(i).get_role().get_name() << endl;
+    }
 
     int X;
     cout << "\n\e[32m [Enter 1 to return to menu]\e[0m\n -> ";

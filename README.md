@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.1.0
+## Version 1.1.1
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
@@ -30,6 +30,7 @@ Lie, evade, and eliminate your way to victory!
 - Fool: Chaos is your game. You only win if you are executed in court.
 - Priest: You survive death once per game. Work with the village to eliminate the killers.
 - Scholar: Your votes in court are tripled. Work with the village to eliminate the killers.
+- Serial Killer: Wake up to kill a player every night. You win when you're the last person standing.
 
 ---
 
@@ -49,6 +50,12 @@ Lie, evade, and eliminate your way to victory!
 ---
 
 ### Update History
+
+#### UPDATE 1.1.1
+05/20/2025
+- New Role: Serial Killer
+- Detective and Fool buffed
+- Minor bug fixes (such as Priest not always letting player survive)
 
 #### UPDATE 1.1.0
 05/20/2025
