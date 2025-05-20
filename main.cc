@@ -1171,7 +1171,7 @@ void statement(Person who){
         }
         if(what == "Priest"){
             X = rand()%3;
-            if(X == 0){
+            if(X == 0 || priest){
                 cout << "I'm a Priest";
             }
             else{
@@ -1274,7 +1274,7 @@ void statement(Person who){
         }
     }
     //scholar (75% chance to say they studied)
-    if(what == "Priest"){
+    if(what == "Scholar"){
         X = rand()%4;
         if(X != 0){
             cout << "I was up studying last night";
@@ -2114,10 +2114,18 @@ void eval(){
 
     cout << "\n\e[33m  *List of Roles*\e[0m\n";
     for(size_t i = 0; i < dead.size(); i++){
-        cout << "\e[34m - \e[0m" << dead.at(i).get_name() << ": " << dead.at(i).get_role().get_name() << endl;
+        cout << "\e[34m - \e[0m" << dead.at(i).get_name() << ": ";
+        if(dead.at(i).get_role().get_team() == "Village"){cout << "\e[32m";}
+        else if(dead.at(i).get_role().get_team() == "Mafia"){cout << "\e[31m";}
+        else{cout << "\e[33m";}
+        cout << dead.at(i).get_role().get_name() << "\e[0m\n";
     }
     for(size_t i = 0; i < Town.size(); i++){
-        cout << "\e[34m - \e[0m" << Town.at(i).get_name() << ": " << Town.at(i).get_role().get_name() << endl;
+        cout << "\e[34m - \e[0m" << Town.at(i).get_name() << ": ";
+        if(Town.at(i).get_role().get_team() == "Village"){cout << "\e[32m";}
+        else if(Town.at(i).get_role().get_team() == "Mafia"){cout << "\e[31m";}
+        else{cout << "\e[33m";}
+        cout << Town.at(i).get_role().get_name() << "\e[0m\n";
     }
 
     int X;
