@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.0.1
+## Version 1.1.0
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
@@ -29,6 +29,7 @@ Lie, evade, and eliminate your way to victory!
 - Mafia: You may be outnumbered, but you know who your allies are. Work with them to kill one player every night. Your goal: eliminate the innocents.
 - Fool: Chaos is your game. You only win if you are executed in court.
 - Priest: You survive death once per game. Work with the village to eliminate the killers.
+- Scholar: Your votes in court are tripled. Work with the village to eliminate the killers.
 
 ---
 
@@ -49,13 +50,20 @@ Lie, evade, and eliminate your way to victory!
 
 ### Update History
 
-#### VERSION 1.0.0
-05/18/2025
-- Game Launched
-- 26 Computer Players
-- 6 Unique Roles: Villager, Mafia, Fool, Cop, Doctor, and Detective
+#### UPDATE 1.1.0
+05/20/2025
+- Computer characters intelligence improved
+- More day options for player
+- New Role: Scholar
+- Minor bug fixes
 
 #### UPDATE 1.0.1
 05/18/2025
 - Minor bug fixes
 - New Role: Priest
+
+#### VERSION 1.0.0
+05/18/2025
+- Game Launched
+- 26 Computer Players
+- 6 Unique Roles: Villager, Mafia, Fool, Cop, Doctor, and Detective
