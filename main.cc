@@ -675,7 +675,7 @@ void day(){
         cout << "\e[33m last night\e[0m\n";
     }
     else{
-        cout << "\e[33m The Mafia didn't kill anyone last night\e[0m\n";
+        if(mafia_count != 0){cout << "\e[33m The Mafia didn't kill anyone last night\e[0m\n";}
         mafia.set_name("");
     }
 
@@ -757,7 +757,8 @@ void day(){
     }
 
     //show number of mafia left
-    cout << " \e[33mThere are " << mafia_count << " Mafia left\e[0m\n\n";
+    if(mafia_count == 0){cout << " \e[33mThere are no Mafia left\e[0m\n\n";}
+    else{cout << " \e[33mThere are " << mafia_count << " Mafia left\e[0m\n\n";}
 
     //check for win
     eval();
