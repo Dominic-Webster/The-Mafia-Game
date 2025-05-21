@@ -972,8 +972,15 @@ void court(){
             if(Town.at(i).get_name() != guilty.get_name()){
                 cout << "\e[36m" << Town.at(i).get_name() << "\e[0m votes to ";
                 if(Town.at(i).get_role().get_name() == "Serial Killer"){
-                    cout << "\e[31mexecute\e[0m";
-                    kill++;
+                    X = rand()%10;
+                    if(X == 0){
+                        cout << "\e[32mspare\e[0m";
+                        spare++;
+                    }
+                    else{
+                        cout << "\e[31mexecute\e[0m";
+                        kill++;
+                    }
                 }
                 else if(Town.at(i).get_role().get_name() == "Mafia"){
                     if(guilty.get_role().get_name() == "Mafia"){ //won't vote against mafia
@@ -1062,6 +1069,17 @@ void court(){
                             cout << "\e[31mexecute\e[0m";
                             kill++;
                         }
+                    }
+                }
+                else if(Town.at(i).get_role().get_name() == "Serial Killer"){
+                    X = rand()%10;
+                    if(X == 0){
+                        cout << "\e[32mspare\e[0m";
+                        spare++;
+                    }
+                    else{
+                        cout << "\e[31mexecute\e[0m";
+                        kill++;
                     }
                 }
                 else{

@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.1.1
+## Version 1.1.2
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
@@ -50,6 +50,15 @@ Lie, evade, and eliminate your way to victory!
 ---
 
 ### Update History
+
+#### UPDATE 1.1.2
+05/20/2025
+- Fixed bug where Mafia couldn't win if Serial Killer wasn't in the game
+- Tweaked Serial Killer spawn chance
+- Decreased chance for player to be a Villager
+- Tweaked Serial Killer court actions
+- Fixed bug where cops would technically shoot the Serial Killer, but people kept getting killed
+- Updated the end of match information to show all character's roles
 
 #### UPDATE 1.1.1
 05/20/2025
