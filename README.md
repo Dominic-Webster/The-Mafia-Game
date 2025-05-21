@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.1.2
+## Version 1.1.3
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
@@ -31,6 +31,7 @@ Lie, evade, and eliminate your way to victory!
 - Priest: You survive death once per game. Work with the village to eliminate the killers.
 - Scholar: Your votes in court are tripled. Work with the village to eliminate the killers.
 - Serial Killer: Wake up to kill a player every night. You win when you're the last person standing.
+- Godfather: On the first night, convert someone to the Mafia. Wake up with the other mafia. Eliminate the innocents.
 
 ---
 
@@ -50,6 +51,11 @@ Lie, evade, and eliminate your way to victory!
 ---
 
 ### Update History
+
+#### UPDATE 1.1.3
+05/21/2025
+- New Role: Godfather
+- Fixed bug where Priest couldn't detect who killed them, so it became a 50/50 between two killed players on who actually survived
 
 #### UPDATE 1.1.2
 05/20/2025
