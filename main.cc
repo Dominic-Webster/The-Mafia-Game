@@ -12,10 +12,10 @@ Person Player("Player"), Adam("Adam"), Brent("Brent"), Cindy("Cindy"), Daphne("D
     Uncle_Parker("Uncle Parker"), Veronica("Veronica"), Wendy("Wendy"), Xavier("Xavier"), Yorra("Yorra"), Zoe("Zoe");
 
 vector <Person> Town, detective1, detective2, dead, sus;
-Person doctor1(""), doctor2(""), mafia(""), cop1(""), cop2(""), serial("");
+Person doctor1(""), doctor2(""), mafia(""), cop1(""), cop2(""), serial(""), ser_kill("");
 int cop1_bullets, cop2_bullets, night_count, def_factor;
 size_t mafia_count;
-bool alive, fool, priest, ser_kill;
+bool alive, fool, priest;
 
 void set_roles(); void town_load(); void player_statement();
 void menu(); void eval(); void court();
@@ -77,9 +77,9 @@ void play(){
     town_load();
     detective1.clear(); detective2.clear(); dead.clear(); sus.clear();
     doctor1.set_name(""); doctor2.set_name("X"); mafia.set_name(""); cop1.set_name(""); 
-    cop2.set_name("O"); serial.set_name("");
+    cop2.set_name("O"); serial.set_name(""), ser_kill.set_name("Dead");
     cop1_bullets = cop2_bullets = 2; night_count = 1;
-    alive = ser_kill = true; fool = priest = false;
+    alive = true; fool = priest = false;
     set_roles();
     Player = Town.at(0);
     string player_role = Player.get_role().get_name();
@@ -230,7 +230,7 @@ void set_roles(){
         else if(X < 23){
             temp.set_name("Serial Killer");
             temp.set_team("Serial Killer");
-            ser_kill = false;
+            ser_kill.set_name("Alive");
             serial_k++;
         }
         else{
@@ -269,6 +269,7 @@ void set_roles(){
             temp.set_team("Serial Killer");
             roles.push_back(temp);
             serial_k++;
+            ser_kill.set_name("Alive");
         }
     }
 
@@ -504,7 +505,7 @@ void night(){
         serial = Town.at(X);
     }
     //computer
-    else if(ser_kill){ 
+    else if(ser_kill.get_name() == "Alive"){ 
         X = rand()%4; //25% chance to kill a mafia
         if(mafia_count != 0 && X == 0){
             do{
@@ -679,7 +680,7 @@ void day(){
         mafia.set_name("");
     }
 
-    if(!ser_kill && serial.get_name() != doctor1.get_name() && serial.get_name() != doctor2.get_name()){
+    if(ser_kill.get_name() == "Alive" && serial.get_name() != doctor1.get_name() && serial.get_name() != doctor2.get_name()){
         cout << "\e[31m ";
         if(serial.get_name() == "Player"){cout << "You\e[33m were"; alive = false;}
         else{cout << serial.get_name() << "\e[33m was";}
@@ -729,7 +730,7 @@ void day(){
     //remove dead players
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == mafia.get_name()){
-            if(mafia.get_role().get_name() == "Serial Killer"){ser_kill = false;}
+            if(mafia.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
             dead.push_back(Town.at(i));
             Town.erase(Town.begin() + i);
         }
@@ -744,6 +745,7 @@ void day(){
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == cop1.get_name()){
             if(cop1.get_role().get_name() == "Mafia"){mafia_count--;}
+            if(cop1.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
             dead.push_back(Town.at(i));
             Town.erase(Town.begin() + i);
         }
@@ -751,6 +753,7 @@ void day(){
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == cop2.get_name()){
             if(cop2.get_role().get_name() == "Mafia"){mafia_count--;}
+            if(cop2.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
             dead.push_back(Town.at(i));
             Town.erase(Town.begin() + i);
         }
@@ -968,7 +971,11 @@ void court(){
         for(size_t i = 1; i < Town.size(); i++){
             if(Town.at(i).get_name() != guilty.get_name()){
                 cout << "\e[36m" << Town.at(i).get_name() << "\e[0m votes to ";
-                if(Town.at(i).get_role().get_name() == "Mafia"){
+                if(Town.at(i).get_role().get_name() == "Serial Killer"){
+                    cout << "\e[31mexecute\e[0m";
+                    kill++;
+                }
+                else if(Town.at(i).get_role().get_name() == "Mafia"){
                     if(guilty.get_role().get_name() == "Mafia"){ //won't vote against mafia
                         cout << "\e[32mspare\e[0m";
                         spare++;
@@ -1111,7 +1118,7 @@ void court(){
                     Town.erase(Town.begin() + i);
                     if(guilty.get_role().get_name() == "Fool"){fool = true;}
                     if(guilty.get_role().get_name() == "Mafia"){mafia_count--;}
-                    if(guilty.get_role().get_name() == "Serial Killer"){ser_kill = false;}
+                    if(guilty.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
                 }
             }
         }
@@ -1607,7 +1614,7 @@ void player_statement(){
 
     if(what == "Mafia"){cout << "\e[31m";}
     else{cout << "\e[36m";}
-    cout << "\nYou "; 
+    cout << "\nYou"; 
     if(priest && what == "Priest"){cout << " (Priest)";}
     cout << ":\e[0m " << answer << endl;
 }
@@ -2058,14 +2065,17 @@ void eval(){
             }
         }
     }
-    else if(mafia_count == 0 && !ser_kill && (!alive && Player.get_role().get_name() == "Serial Killer")){ //killers eliminated
-        cout << "\n\e[33m  THE MAFIA HAVE BEEN ELIMINATED\n";
+    else if(mafia_count == 0 && ser_kill.get_name() == "Dead"){ //killers eliminated
+        cout << "\n\e[33m  THE KILLERS HAVE BEEN ELIMINATED\n";
         cout << "  GAME OVER\e[0m\n";
-        if(Player.get_role().get_name() != "Mafia" && Player.get_role().get_name() != "Fool"){
+        if(Player.get_role().get_team() == "Village"){
             cout << "\e[32m You Win!\e[0m\n";
         }
         else if(Player.get_role().get_name() == "Mafia"){
             cout << "\e[31m Your team was eliminated. The Village wins!\e[0m\n";
+        }
+        else if(Player.get_role().get_name() == "Serial Killer"){
+            cout << "\e[31m You didn't kill everyone. The Village wins!\e[0m\n";
         }
         else{
             cout << "\e[31m You were not executed in court. The Village wins!\e[0m\n";
@@ -2081,7 +2091,7 @@ void eval(){
             }
         }
     }
-    else if(!ser_kill && (mafia_count > (Town.size() / 2) || (Town.size()%2 == 0 && mafia_count == (Town.size() / 2)))){ //mafia have eliminated enough people
+    else if(ser_kill.get_name() == "Dead" && (mafia_count > (Town.size() / 2) || (Town.size()%2 == 0 && mafia_count == (Town.size() / 2)))){ //mafia have eliminated enough people
         cout << "\n\e[33m  THE MAFIA HAVE TAKEN OVER THE VILLAGE\n";
         cout << "  GAME OVER\e[0m\n";
         if(Player.get_role().get_name() == "Mafia"){
@@ -2112,7 +2122,7 @@ void eval(){
             }
         }
     }
-    else if(Town.size() == 1 && ser_kill){ //serial killer last person standing
+    else if(Town.size() == 1 && ser_kill.get_name() == "Alive"){ //serial killer last person standing
         cout << "\n\e[33m  THE SERIAL KILLER HAS ELIMINATED THE ENTIRE POPULATION\n";
         cout << "  GAME OVER\e[0m\n";
         if(Player.get_role().get_name() == "Serial Killer"){
