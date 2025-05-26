@@ -392,16 +392,13 @@ void set_roles(){
     roles.push_back(temp);
     roles.push_back(temp);
     mafia+=3;
-    mafia_count = 4;
     if(X > 0){
         roles.push_back(temp);
         mafia++;
-        mafia_count++;
     }
     if(X > 1 && mafia != 6){
         roles.push_back(temp);
         mafia++;
-        mafia_count++;
     }
 
     //villagers (fills in emty slots)
@@ -434,6 +431,14 @@ void night(){
     cout << " \e[36m  NIGHT " << night_count << "\e[0m" << endl << endl;
     doctor1.set_name(""); doctor2.set_name("X"); mafia.set_name(""); cop1.set_name(""); cop2.set_name("O");
     serial.set_name(""); godf.set_name("");
+
+    //set mafia count
+    mafia_count = 0;
+    for(size_t i = 0; i < Town.size(); i++){
+        if(Town.at(i).get_role().get_team() == "Mafia"){
+            mafia_count++;
+        }
+    }
 
     if(alive){
         if(what == "Villager" || what == "Fool" || what == "Priest" || what == "Scholar"){
@@ -742,6 +747,7 @@ void night(){
 
 void day(){
     size_t X; sus.clear();
+
     cout << " \e[36m  DAY " << night_count << "\e[0m" << endl << endl;
 
     //night events
@@ -819,7 +825,6 @@ void day(){
     }
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == serial.get_name()){
-            if(serial.get_role().get_team() == "Mafia"){mafia_count--;}
             if(serial.get_name() == godf.get_name()){godf.set_name("");}
             dead.push_back(Town.at(i));
             Town.erase(Town.begin() + i);
@@ -827,7 +832,6 @@ void day(){
     }
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == cop1.get_name()){
-            if(cop1.get_role().get_team() == "Mafia"){mafia_count--;}
             if(cop1.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
             if(cop1.get_name() == godf.get_name()){godf.set_name("");}
             dead.push_back(Town.at(i));
@@ -836,7 +840,6 @@ void day(){
     }
     for(size_t i = 0; i < Town.size(); i++){
         if(Town.at(i).get_name() == cop2.get_name()){
-            if(cop2.get_role().get_team() == "Mafia"){mafia_count--;}
             if(cop2.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
             if(cop2.get_name() == godf.get_name()){godf.set_name("");}
             dead.push_back(Town.at(i));
@@ -851,7 +854,6 @@ void day(){
                 Role temp; temp.set_lvl(1);
                 temp.set_name("Mafia"); temp.set_team("Mafia");
                 Town.at(i).set_role(temp);
-                mafia_count++;
                 if(Town.at(i).get_name() == "Player"){
                     cout << "\n\e[31m The Godfather visited you last night\n";
                     cout << " Welcome to the Mafia\e[0m\n";
@@ -869,6 +871,14 @@ void day(){
     }
 
     cout << endl;
+
+    //figure out mafia count
+    mafia_count = 0;
+    for(size_t i = 0; i < Town.size(); i++){
+        if(Town.at(i).get_role().get_team() == "Mafia"){
+            mafia_count++;
+        }
+    }
 
     //show number of mafia left
     if(mafia_count == 0){cout << " \e[33mThere are no Mafia left\e[0m\n\n";}
@@ -1262,7 +1272,6 @@ void court(){
                     dead.push_back(Town.at(i));
                     Town.erase(Town.begin() + i);
                     if(guilty.get_role().get_name() == "Fool"){fool = true;}
-                    if(guilty.get_role().get_team() == "Mafia"){mafia_count--;}
                     if(guilty.get_role().get_name() == "Serial Killer"){ser_kill.set_name("Dead");}
                 }
             }
