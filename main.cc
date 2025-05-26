@@ -88,6 +88,9 @@ void play(){
     if(player_role == "Villager"){
         cout << " Help catch the Mafia before they kill the village\n";
     }
+    else if(player_role == "Mason"){
+        cout << " You know who the other Masons are. Help catch the Mafia before they kill the village\n";
+    }
     else if(player_role == "Mafia"){
         cout << " Work with the other Mafia to kill the village\n";
     }
@@ -147,6 +150,10 @@ void role_list(){
     cout << "   \e[35m-\e[0m Win Condition: Eliminate all the killers\n";
     cout << "   \e[35m-\e[0m Ability: None\n";
 
+    cout << "\e[36m-\e[0m \e[32mMason:\e[0m Village Team\n";
+    cout << "   \e[35m-\e[0m Win Condition: Eliminate all the killers\n";
+    cout << "   \e[35m-\e[0m Ability: You know who the other Masons are\n";
+
     cout << "\e[36m-\e[0m \e[31mMafia:\e[0m Mafia Team\n";
     cout << "   \e[35m-\e[0m Win Condition: Eliminate the village\n";
     cout << "   \e[35m-\e[0m Ability: Wake up with other Mafia to kill a player\n";
@@ -191,7 +198,7 @@ void role_list(){
 void set_roles(){
     vector <Role> roles;
     int mafia = 0, villager = 0, cop = 0, doctor = 0, detective = 0, fool = 0, priest_count = 0, 
-    scholar = 0, serial_k = 0, godfather = 0;
+    scholar = 0, serial_k = 0, godfather = 0, mason = 0;
     Role temp("");
     temp.set_lvl(1);
 
@@ -203,8 +210,8 @@ void set_roles(){
         villager++;
     }
     else{
-        X = rand()%27;
-        if(X < 5){
+        X = rand()%30;
+        if(X < 6){
             X = rand()%4;
             if(X == 0){
                 temp.set_name("Godfather");
@@ -221,7 +228,7 @@ void set_roles(){
             temp.set_team("Village");
             doctor++;
         }
-        else if(X < 13){
+        else if(X < 12){
             temp.set_name("Cop");
             temp.set_team("Village");
             cop++;
@@ -236,16 +243,21 @@ void set_roles(){
             temp.set_team("Village");
             priest_count++;
         }
-        else if(X < 19){
+        else if(X < 20){
             temp.set_name("Scholar");
             temp.set_team("Village");
             scholar++;
         }
-        else if(X < 23){
+        else if(X < 25){
             temp.set_name("Serial Killer");
             temp.set_team("Serial Killer");
             ser_kill.set_name("Alive");
             serial_k++;
+        }
+        else if(X < 27){
+            temp.set_name("Mason");
+            temp.set_team("Village");
+            mason++;
         }
         else{
             temp.set_name("Detective");
@@ -253,6 +265,9 @@ void set_roles(){
             detective++;
         }
     }
+    //test new roles:
+    //temp.set_name("Mason");
+    //temp.set_team("Village");
     Town.at(0).set_role(temp);
 
     //create the other 26 roles
@@ -295,17 +310,28 @@ void set_roles(){
         priest_count++;
     }
 
+    //mason (2-3)
+    X = rand()%2;
+    temp.set_name("Mason");
+    temp.set_team("Village");
+    if(mason == 0){
+        roles.push_back(temp);
+        mason++;
+    }
+    if(X == 1){
+        roles.push_back(temp);
+        mason++;
+    }
+
     //cop (1-2)
+    temp.set_name("Cop");
+    temp.set_team("Village");
     X = rand()%2;
     if(cop == 0){
-        temp.set_name("Cop");
-        temp.set_team("Village");
         roles.push_back(temp);
         cop++;
     }
     if(X == 1){
-        temp.set_name("Cop");
-        temp.set_team("Village");
         temp.set_lvl(2);
         roles.push_back(temp);
         temp.set_lvl(1);
@@ -313,16 +339,14 @@ void set_roles(){
     }
 
     //doctor (1-2)
+    temp.set_name("Doctor");
+    temp.set_team("Village");
     X = rand()%2;
     if(doctor == 0){
-        temp.set_name("Doctor");
-        temp.set_team("Village");
         roles.push_back(temp);
         doctor++;
     }
     if(X == 1){
-        temp.set_name("Doctor");
-        temp.set_team("Village");
         temp.set_lvl(2);
         roles.push_back(temp);
         temp.set_lvl(1);
@@ -330,16 +354,14 @@ void set_roles(){
     }
 
     //detective (1-2)
+    temp.set_name("Detective");
+    temp.set_team("Village");
     X = rand()%2;
     if(detective == 0){
-        temp.set_name("Detective");
-        temp.set_team("Village");
         roles.push_back(temp);
         detective++;
     }
     if(X == 1){
-        temp.set_name("Detective");
-        temp.set_team("Village");
         temp.set_lvl(2);
         roles.push_back(temp);
         temp.set_lvl(1);
@@ -360,13 +382,12 @@ void set_roles(){
 
     //mafia (4-6)
     X = rand()%3;
+    temp.set_name("Mafia");
+    temp.set_team("Mafia");
     if(mafia == 0){
-        temp.set_name("Mafia");
         roles.push_back(temp);
         mafia++;
     }
-    temp.set_name("Mafia");
-    temp.set_team("Mafia");
     roles.push_back(temp);
     roles.push_back(temp);
     roles.push_back(temp);
@@ -383,40 +404,11 @@ void set_roles(){
         mafia_count++;
     }
 
-    //villagers (11/13 - 16/18)
+    //villagers (fills in emty slots)
     temp.set_name("Villager");
     temp.set_team("Village");
-    for(int i = 0; i < 11; i++){
+    while(roles.size() < 27){
         roles.push_back(temp);
-        villager++;
-    }
-    if(cop == 1){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(scholar == 0){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(serial_k == 0){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(doctor == 1){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(detective == 1){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(mafia < 6){
-        roles.push_back(temp);
-        villager++;
-    }
-    if(mafia < 5){
-        roles.push_back(temp);
-        villager++;
     }
 
     //randomly add roles to players
@@ -729,6 +721,17 @@ void night(){
             }
         }
     }
+    
+    //MASON
+    //player
+    if(alive && what == "Mason"){
+        cout << "\e[36m Other Masons in town:\e[0m\n";
+        for(size_t i = 1; i < Town.size(); i++){
+            if(Town.at(i).get_role().get_name() == "Mason"){
+                cout << " \e[36m- \e[0m" << Town.at(i).get_name() << endl;
+            }
+        }
+    }
     cout << endl;
 
     cout << "\e[32m[Enter 1 to proceed to day]\e[0m\n -> ";
@@ -881,8 +884,9 @@ void day(){
 
     //each player's statement
     if(!alive){
-        if(Town.at(0).get_role().get_name() == "Mafia" && Player.get_role().get_name() == "Mafia"){cout << "\e[31m";}
-        else{cout << "\e[36m";}
+        if(Town.at(0).get_role().get_team() == "Mafia" && Player.get_role().get_team() == "Mafia"){cout << "\e[31m";}
+        else if(Town.at(0).get_role().get_name() == "Mason" && Player.get_role().get_name() == "Mason"){cout << "\e[36m";}
+        else{cout << "\e[32m";}
         cout << Town.at(0).get_name(); 
         if(priest && Town.at(0).get_role().get_name() == "Priest"){cout << " (Priest)";}
         cout << ":\e[0m ";
@@ -890,8 +894,9 @@ void day(){
         cout << endl;
     }
     for(size_t i = 1; i < Town.size(); i++){
-        if(Town.at(i).get_role().get_name() == "Mafia" && Player.get_role().get_name() == "Mafia"){cout << "\e[31m";}
-        else{cout << "\e[36m";}
+        if(Town.at(i).get_role().get_team() == "Mafia" && Player.get_role().get_team() == "Mafia"){cout << "\e[31m";}
+        else if(Town.at(i).get_role().get_name() == "Mason" && Player.get_role().get_name() == "Mason"){cout << "\e[36m";}
+        else{cout << "\e[32m";}
         cout << Town.at(i).get_name(); 
         if(priest && Town.at(i).get_role().get_name() == "Priest"){cout << " (Priest)";}
         cout << ":\e[0m ";
@@ -933,7 +938,8 @@ void court(){
         do{
             cout << "\e[33m Nominate someone to stand trial \e[0m\n";
             for(size_t i = 1; i < Town.size(); i++){
-                if(Town.at(i).get_role().get_name() == "Mafia" && Player.get_role().get_name() == "Mafia"){cout << "\e[31m";}
+                if(Town.at(i).get_role().get_team() == "Mafia" && Player.get_role().get_team() == "Mafia"){cout << "\e[31m";}
+                else if(Town.at(i).get_role().get_name() == "Mason" && Player.get_role().get_name() == "Mason"){cout << "\e[36m";}
                 else{cout << "\e[35m";}
                 cout << i << ":\e[0m " << Town.at(i).get_name(); 
                 if(priest && Town.at(i).get_role().get_name() == "Priest"){cout << " (Priest)";}
@@ -1033,7 +1039,12 @@ void court(){
         player_def();
     }
     else{
-        cout << "\e[36m " << guilty.get_name() << "\e[0m: ";
+        if(guilty.get_role().get_team() == "Mafia" && Player.get_role().get_team() == "Mafia"){cout << "\e[31m ";}
+        else if(guilty.get_role().get_name() == "Mason" && Player.get_role().get_name() == "Mason"){cout << "\e[36m ";}
+        else{cout << "\e[35m ";}
+        cout << guilty.get_name(); 
+        if(priest && guilty.get_role().get_name() == "Priest"){cout << " (Priest)";}
+        cout << "\e[0m: ";
         defense(guilty);
         cout << endl;
     }
@@ -1089,6 +1100,10 @@ void court(){
                         cout << "\e[31mexecute\e[0m";
                         kill++;
                     }
+                }
+                else if(Town.at(i).get_role().get_name() == "Mason" && guilty.get_role().get_name() == "Mason"){ //won't vote against each other
+                    cout << "\e[32mspare\e[0m";
+                    spare++;
                 }
                 else if(Town.at(i).get_role().get_team() == "Mafia"){
                     if(guilty.get_role().get_team() == "Mafia"){ //won't vote against mafia
@@ -1178,6 +1193,10 @@ void court(){
                             kill++;
                         }
                     }
+                }
+                else if(Town.at(i).get_role().get_name() == "Mason" && guilty.get_role().get_name() == "Mason"){ //won't vote against each other
+                    cout << "\e[32mspare\e[0m";
+                    spare++;
                 }
                 else if(Town.at(i).get_role().get_name() == "Serial Killer"){
                     X = rand()%10;
@@ -1287,6 +1306,15 @@ void statement(Person who){
                 cout << "I'm just a Villager";
             }
         }
+        if(what == "Mason"){
+            X = rand()%4;
+            if(X == 0){
+                cout << "I'm a Mason";
+            }
+            else{
+                cout << "I'm just a Villager";
+            }
+        }
         if(what == "Cop"){
             X = rand()%4;
             if(X == 0){
@@ -1333,7 +1361,7 @@ void statement(Person who){
             }
         }
         if(what == "Fool"){
-            X = rand()%6;
+            X = rand()%7;
             if(X == 0){
                 cout << "I'm a Doctor";
             }
@@ -1348,13 +1376,16 @@ void statement(Person who){
             }
             else if(X == 4){
                 cout << "I'm a Scholar";
+            }
+            else if(X == 5){
+                cout << "I'm a Mason";
             }
             else{
                 cout << "I'm just a Villager";
             }
         }
         if(what == "Mafia"){
-            X = rand()%9;
+            X = rand()%10;
             if(X == 0){
                 cout << "I'm a Doctor";
             }
@@ -1369,6 +1400,9 @@ void statement(Person who){
             }
             else if(X == 4){
                 cout << "I'm a Scholar";
+            }
+            else if(X == 5){
+                cout << "I'm a Mason";
             }
             else{
                 cout << "I'm just a Villager";
@@ -1455,16 +1489,22 @@ void statement(Person who){
         X = rand()%4;
         if(X == 0){
             if(who.get_role().get_lvl() == 1){
-                if(cop1_bullets != 0){
-                    cout << "I still have " << cop1_bullets << " bullets left";
+                if(cop1_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
+                }
+                else if(cop1_bullets == 1){
+                    cout << "I still have 1 bullet left";
                 }
                 else{
                     cout << "I have nothing to declare";
                 }
             }
             else{
-                if(cop2_bullets != 0){
-                    cout << "I still have " << cop2_bullets << " bullets left";
+                if(cop2_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
+                }
+                else if(cop2_bullets == 1){
+                    cout << "I still have 1 bullet left";
                 }
                 else{
                     cout << "I have nothing to declare";
@@ -1477,7 +1517,7 @@ void statement(Person who){
     if(what == "Mafia"){
         X = rand()%5;
         if(X < 2){ //fake a role
-            X = rand()%4;
+            X = rand()%5;
             if(X == 0){ //doctor
                 cout << "Last night, I saved ";
                 X = rand()%Town.size();
@@ -1485,11 +1525,17 @@ void statement(Person who){
                 else{cout << Town.at(X).get_name();}
             }
             else if(X == 1){ //cop
-                if(cop1_bullets != 0){
-                    cout << "I still have " << cop1_bullets << " bullets left";
+                if(cop1_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
                 }
-                else if(cop2_bullets != 0){
-                    cout << "I still have " << cop2_bullets << " bullets left";
+                else if(cop1_bullets == 1){
+                    cout << "I still have 1 bullet left";
+                }
+                else if(cop2_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
+                }
+                else if(cop2_bullets == 1){
+                    cout << "I still have 1 bullet left";
                 }
                 else{
                     cout << "I have nothing to declare";
@@ -1497,6 +1543,19 @@ void statement(Person who){
             }
             else if(X == 2){ //priest
                 cout << "I was praying last night";
+            }
+            else if(X == 3){ //mason
+                X = rand()%2;
+                if(X == 0){
+                    do{
+                        X = rand()%Town.size();
+                    }while(Town.at(X).get_name() != who.get_name());
+                    cout << Town.at(X).get_name() << " and I are Masons";
+                    def_factor+=2;
+                }
+                else{
+                    cout << " I'm the last of the Masons";
+                }
             }
             else{ //detective
                 do{
@@ -1559,11 +1618,29 @@ void statement(Person who){
             return;
         }
     }
+    //mason (40% chance to out another mason)
+    if(what == "Mason"){
+        X = rand()%5;
+        if(X < 2){
+            int mason_count = 0;
+            for(size_t i = 0; i < Town.size(); i++){
+                if(Town.at(i).get_name() != who.get_name() && Town.at(i).get_role().get_name() == "Mason"){
+                    cout << Town.at(i).get_name() << " and I are Masons";
+                    mason_count = 1;
+                    i = Town.size();
+                }
+            }
+            if(mason_count == 0){
+                cout << " I'm the last of the Masons";
+            }
+            return;
+        }
+    }
     //fool (50% chance to pretend to be another role)
     if(what == "Fool"){
         X = rand()%2;
         if(X == 0){ //fake a role
-            X = rand()%4;
+            X = rand()%5;
             if(X == 0){ //doctor
                 cout << "Last night, I saved ";
                 X = rand()%Town.size();
@@ -1571,11 +1648,17 @@ void statement(Person who){
                 else{cout << Town.at(X).get_name();}
             }
             else if(X == 1){ //cop
-                if(cop1_bullets != 0){
-                    cout << "I still have " << cop1_bullets << " bullets left";
+                if(cop1_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
                 }
-                else if(cop2_bullets != 0){
-                    cout << "I still have " << cop2_bullets << " bullets left";
+                else if(cop1_bullets == 1){
+                    cout << "I still have 1 bullet left";
+                }
+                else if(cop2_bullets == 2){
+                    cout << "There are 2 bullets in my revolver";
+                }
+                else if(cop2_bullets == 1){
+                    cout << "I still have 1 bullet left";
                 }
                 else{
                     cout << "I have nothing to declare";
@@ -1583,6 +1666,19 @@ void statement(Person who){
             }
             else if(X == 2){ //priest
                 cout << "I was praying last night";
+            }
+            else if(X == 3){ //mason
+                X = rand()%2;
+                if(X == 0){
+                    do{
+                        X = rand()%Town.size();
+                    }while(Town.at(X).get_name() != who.get_name());
+                    cout << Town.at(X).get_name() << " and I are Masons";
+                    def_factor+=2;
+                }
+                else{
+                    cout << " I'm the last of the Masons";
+                }
             }
             else{ //detective
                 do{
@@ -1617,6 +1713,20 @@ void player_statement(){
         }while(X < 1 || X > 3);
         if(X == 1){answer = "I have nothing to declare";}
         else if(X == 2){answer = "I'm just a Villager";}
+        else{answer = "I don't want to reveal my role yet"; sus.push_back(Player);}
+    }
+    if(what == "Mason"){
+        do{
+            cout << "\e[33m What would you like to say?\e[0m\n";
+            cout << "\e[35m 1:\e[0m I have nothing to declare\n";
+            cout << "\e[35m 2:\e[0m I'm just a Villager\n";
+            cout << "\e[35m 3:\e[0m I'm a Mason\n";
+            cout << "\e[35m 4:\e[0m I don't want to reveal my role yet\n -> ";
+            cin >> X;
+        }while(X < 1 || X > 4);
+        if(X == 1){answer = "I have nothing to declare";}
+        else if(X == 2){answer = "I'm just a Villager";}
+        else if(X == 3){answer = "I'm a Mason";}
         else{answer = "I don't want to reveal my role yet"; sus.push_back(Player);}
     }
     if(what == "Priest"){
@@ -1739,7 +1849,8 @@ void player_statement(){
     }
 
     if(Player.get_role().get_team() == "Mafia"){cout << "\e[31m";}
-    else{cout << "\e[36m";}
+    else if(Player.get_role().get_name() == "Mason"){cout << "\e[36m";}
+    else{cout << "\e[32m";}
     cout << "\nYou"; 
     if(priest && what == "Priest"){cout << " (Priest)";}
     cout << ":\e[0m " << answer << endl;
@@ -1759,6 +1870,47 @@ void player_def(){
         cout << "\n\e[36m You:\e[0m ";
         if(X == 1){cout << "I'm innocent\n";}
         else if(X == 2){cout << "If you vote for me, you'll regret it\n"; def_factor--;}
+        else{cout << "Don't kill me, you need me\n"; def_factor++;}
+        return;
+    }
+    if(what == "Mason"){
+        do{
+            cout << " \e[33mWhat would you like to say?\e[0m\n";
+            cout << "\e[35m 1:\e[0m I'm innocent\n";
+            cout << "\e[35m 2:\e[0m This is a grave mistake\n";
+            cout << "\e[35m 3:\e[0m I'm a Mason!";
+            int mason_count = 0;
+            for(size_t i = 1; i < Town.size(); i++){
+                if(Town.at(i).get_role().get_name() == "Mason"){
+                    cout << " Just ask " << Town.at(i).get_name() << "!\n";
+                    mason_count = 1;
+                    i = Town.size();
+                }
+            }
+            if(mason_count == 0){
+                cout << " All my friends are dead!\n";
+            }
+            cout << "\e[35m 4:\e[0m Don't kill me, you need me\n -> ";
+            cin >> X;
+        }while(X < 1 || X > 3);
+        cout << "\n\e[36m You:\e[0m ";
+        if(X == 1){cout << "I'm innocent\n";}
+        else if(X == 2){cout << "This is a grave mistake\n"; def_factor--;}
+        else if(X == 3){
+            cout << "I'm a Mason!";
+            int mason_count = 0;
+            for(size_t i = 1; i < Town.size(); i++){
+                if(Town.at(i).get_role().get_name() == "Mason"){
+                    cout << " Just ask " << Town.at(i).get_name() << "!\n";
+                    mason_count = 1;
+                    def_factor+=2;
+                    i = Town.size();
+                }
+            }
+            if(mason_count == 0){
+                cout << " All my friends are dead!\n";
+            }
+        }
         else{cout << "Don't kill me, you need me\n"; def_factor++;}
         return;
     }
@@ -1939,6 +2091,47 @@ void defense(Person who){
         }
         return;
     }
+    if(what == "Mason"){
+        X = rand()%3;
+        if(X == 0){
+            X = rand()%5;
+            if(X == 0){
+                cout << "I'm innocent, I swear!";
+            }
+            else if(X == 1){
+                cout << "I was asleep all night";
+                def_factor++;
+            }
+            else if(X == 2){
+                cout << "Please don't kill me!";
+                def_factor--;
+            }
+            else if(X == 3){
+                cout << "I'm literally just a Villager, I've done nothing at all!";
+                def_factor+=2;
+            }
+            else{
+                cout << "Please don't kill me!";
+                def_factor-=2;
+            }
+        }
+        else{
+            cout << "I'm a Mason!";
+            int mason_count = 0;
+            for(size_t i = 0; i < Town.size(); i++){
+                if(Town.at(i).get_name() != them && Town.at(i).get_role().get_name() == "Mason"){
+                    cout << " Just ask " << Town.at(i).get_name() << "!";
+                    mason_count = 1;
+                    def_factor+=2;
+                    i = Town.size();
+                }
+            }
+            if(mason_count == 0){
+                cout << " All my friends are dead!";
+            }
+        }
+        return;
+    }
     if(what == "Cop"){
         X = rand()%2;
         if(X == 0){
@@ -2090,7 +2283,7 @@ void defense(Person who){
         return;
     }
     if(what == "Fool"){
-        X = rand()%6;
+        X = rand()%7;
         if(X == 0){
             X = rand()%5;
             if(X == 0){
@@ -2125,13 +2318,27 @@ void defense(Person who){
         else if(X == 4){
             cout << "I'm a Scholar! I don't do violence!";
         }
+        else if(X == 5){
+            cout << "I'm a Mason!";
+            X = rand()%2;
+            if(X == 0){
+                do{
+                    X = rand()%Town.size();
+                }while(Town.at(X).get_name() != them);
+                cout << " Just ask " << Town.at(X).get_name() << "!";
+                def_factor+=2;
+            }
+            else{
+                cout << " All my friends are dead!";
+            }
+        }
         else{
             cout << "Don't do this. I'm a cop!";
         }
         return;
     }
     if(what == "Mafia"){
-        X = rand()%6;
+        X = rand()%7;
         if(X == 0){
             X = rand()%5;
             if(X == 0){
@@ -2167,6 +2374,20 @@ void defense(Person who){
         }
         else if(X == 4){
             cout << "I'm a Scholar! I don't do violence!";
+        }
+        else if(X == 5){
+            cout << "I'm a Mason!";
+            X = rand()%2;
+            if(X == 0){
+                do{
+                    X = rand()%Town.size();
+                }while(Town.at(X).get_name() != them);
+                cout << " Just ask " << Town.at(X).get_name() << "!";
+                def_factor+=2;
+            }
+            else{
+                cout << " All my friends are dead!";
+            }
         }
         else{
             cout << "Don't do this. I'm a cop!";
@@ -2269,7 +2490,7 @@ void eval(){
         else{cout << "\e[33m";}
         cout << dead.at(i).get_role().get_name() << "\e[0m\n";
     }
-    cout << " \e[32m ALIVE\n";
+    cout << "\n \e[32m ALIVE\n";
     for(size_t i = 0; i < Town.size(); i++){
         cout << "\e[34m - \e[0m" << Town.at(i).get_name() << ": ";
         if(Town.at(i).get_role().get_team() == "Village"){cout << "\e[32m";}

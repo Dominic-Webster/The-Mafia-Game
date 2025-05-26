@@ -1,5 +1,5 @@
 # THE MAFIA GAME
-## Version 1.1.3
+## Version 1.1.4
 
 ## THE CLASSIC SOCIAL DEDUCTION GAME
 
@@ -32,6 +32,7 @@ Lie, evade, and eliminate your way to victory!
 - Scholar: Your votes in court are tripled. Work with the village to eliminate the killers.
 - Serial Killer: Wake up to kill a player every night. You win when you're the last person standing.
 - Godfather: On the first night, convert someone to the Mafia. Wake up with the other mafia. Eliminate the innocents.
+- Mason: You know who the other Masons are. Work with the village to eliminate the killers.
 
 ---
 
@@ -51,6 +52,12 @@ Lie, evade, and eliminate your way to victory!
 ---
 
 ### Update History
+
+#### UPDATE 1.1.4
+05/26/2025
+- New Role: Mason
+- Improved role assignment code
+- The line "I still have 1 bullets left" has been fixed
 
 #### UPDATE 1.1.3
 05/21/2025
