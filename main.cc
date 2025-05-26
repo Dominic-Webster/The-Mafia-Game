@@ -1549,7 +1549,7 @@ void statement(Person who){
                 if(X == 0){
                     do{
                         X = rand()%Town.size();
-                    }while(Town.at(X).get_name() != who.get_name());
+                    }while(Town.at(X).get_name() == who.get_name());
                     cout << Town.at(X).get_name() << " and I are Masons";
                     def_factor+=2;
                 }
@@ -1672,7 +1672,7 @@ void statement(Person who){
                 if(X == 0){
                     do{
                         X = rand()%Town.size();
-                    }while(Town.at(X).get_name() != who.get_name());
+                    }while(Town.at(X).get_name() == who.get_name());
                     cout << Town.at(X).get_name() << " and I are Masons";
                     def_factor+=2;
                 }
@@ -2324,7 +2324,7 @@ void defense(Person who){
             if(X == 0){
                 do{
                     X = rand()%Town.size();
-                }while(Town.at(X).get_name() != them);
+                }while(Town.at(X).get_name() == them);
                 cout << " Just ask " << Town.at(X).get_name() << "!";
                 def_factor+=2;
             }
@@ -2381,7 +2381,7 @@ void defense(Person who){
             if(X == 0){
                 do{
                     X = rand()%Town.size();
-                }while(Town.at(X).get_name() != them);
+                }while(Town.at(X).get_name() == them);
                 cout << " Just ask " << Town.at(X).get_name() << "!";
                 def_factor+=2;
             }
