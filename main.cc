@@ -861,7 +861,7 @@ void day(){
                     cout << " They are now in the Mafia\e[0m\n";
                 }
                 else{
-                    cout << "\n\e[31m The Godfather visited is in town\n";
+                    cout << "\n\e[31m The Godfather is in town\n";
                     cout << " Someone joined the Mafia last night\e[0m\n"; 
                 }
             }
